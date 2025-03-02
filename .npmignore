@@ -1,0 +1,16 @@
+# Source
+src/
+
+# Config files
+.babelrc
+rollup.config.js
+tsconfig.json
+
+# Scripts
+scripts/
+
+# Dev files
+.gitignore
+.github/
+.vscode/
+node_modules/
