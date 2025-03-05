@@ -1,15 +1,17 @@
-const babel = require('@rollup/plugin-babel');
-const resolve = require('@rollup/plugin-node-resolve');
-const commonjs = require('@rollup/plugin-commonjs');
-const typescript = require('@rollup/plugin-typescript');
-const external = require('rollup-plugin-peer-deps-external');
-const replace = require('@rollup/plugin-replace');
+import babel from '@rollup/plugin-babel';
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
+import typescript from '@rollup/plugin-typescript';
+import external from 'rollup-plugin-peer-deps-external';
+import terser from '@rollup/plugin-terser'
+import {createRequire} from 'module';
 
+const require = createRequire(import.meta.url);
 const packageJson = require('./package.json');
 
 const extensions = ['.js', '.jsx', '.ts', '.tsx'];
 
-module.exports = [
+export default [
   // ESM build for web
 {
   input: 'src/index.ts',
@@ -27,31 +29,11 @@ module.exports = [
       babelHelpers: 'bundled',
       exclude: 'node_modules/**',
       extensions
-    })
+    }),
+    terser()
   ],
   external: ['react', 'react-dom', 'react-native-web']
 },
-  // CJS build for web
-  {
-    input: 'src/index.ts',
-    output: {
-      file: packageJson.main,
-      format: 'cjs',
-      sourcemap: true
-    },
-    plugins: [
-      external(),
-      resolve({ extensions }),
-      commonjs(),
-      typescript({ tsconfig: './tsconfig.json' }),
-      babel({
-        babelHelpers: 'bundled',
-        exclude: 'node_modules/**',
-        extensions
-      })
-    ],
-    external: ['react', 'react-dom', 'react-native-web']
-  },
   // Native build (without react-native replacement)
   {
     input: 'src/index.ts',
@@ -69,7 +51,8 @@ module.exports = [
         babelHelpers: 'bundled',
         exclude: 'node_modules/**',
         extensions
-      })
+      }),
+      terser()
     ],
     external: ['react', 'react-native']
   }

@@ -1,11 +1,12 @@
-const { execSync } = require('child_process');
-const fs = require('fs');
-const path = require('path');
+import { execSync } from 'child_process';
+import { rmSync, existsSync } from 'fs';
+import { resolve } from 'path';
 
 // Clean dist directory
 console.log('Cleaning dist directory...');
-if (fs.existsSync('dist')) {
-  fs.rmSync('dist', { recursive: true, force: true });
+const distPath = resolve('dist');
+if (existsSync(distPath)) {
+  rmSync(distPath, { recursive: true, force: true });
 }
 
 // Run Rollup
