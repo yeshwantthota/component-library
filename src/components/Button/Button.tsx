@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { 
   StyleSheet, 
   TouchableOpacity, 
@@ -10,6 +10,11 @@ import {
 import { ButtonProps } from '../../types';
 import { defaultTheme } from '../../styles/theme';
 
+const VALID_VARIANTS = ['primary', 'secondary', 'outline', 'text'] as const;
+const VALID_SIZES = ['small', 'medium', 'large'] as const;
+
+const isDev = process.env.NODE_ENV === 'development';
+
 const Button: React.FC<ButtonProps> = ({
   title,
   onPress,
@@ -19,6 +24,36 @@ const Button: React.FC<ButtonProps> = ({
   style,
   textStyle
 }) => {
+
+  useEffect(() => {
+    if(isDev){
+      if(!title || typeof title !== 'string'){
+        console.error(`Button: Invalid title prop. Must be a string.`)
+      }
+
+      if(!onPress || typeof onPress !== 'function'){
+        console.error(`Button: Invalid onPress prop. Must be a function.`)
+      }
+
+      if(variant && !VALID_VARIANTS.includes(variant as any)){
+        console.error(`Button: Invalid variant "${variant}". Must be one of: ${VALID_VARIANTS.join(', ')}`)
+      }
+
+      if(size && !VALID_SIZES.includes(size as any)){
+        console.error(`Button: Invalid size "${size}". Must be one of: ${VALID_SIZES.join(', ')}`)
+      }
+      if(disabled && typeof disabled !== 'boolean'){
+        console.error(`Button: Invalid disabled prop. Must be a boolean value.`)
+      }
+      if(style && typeof style !== 'object'){
+        console.error(`Button: Invalid style prop. Must be an object.`)
+      }
+      if(textStyle && typeof textStyle !== 'object'){
+        console.error(`Button: Invalid textStyle prop. Must be an object.`)
+      }
+    }
+  }, [title, onPress, variant, size, disabled, style, textStyle]);
+
   const getContainerStyle = (): StyleProp<ViewStyle> => {
     const baseStyle: ViewStyle = {
       borderRadius: defaultTheme.borderRadius.md,

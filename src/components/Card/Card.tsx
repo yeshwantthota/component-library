@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import { CardProps } from '../../types';
 import { defaultTheme } from '../../styles/theme';
@@ -8,6 +8,19 @@ const Card: React.FC<CardProps> = ({
   style,
   variant = 'elevated'
 }) => {
+  const VALID_VARIANTS = ['elevated', 'outlined', 'filled'] as const;
+  const isDev = process.env.NODE_ENV === 'development';
+  useEffect(()=> {
+     if(isDev){
+        if(variant && !VALID_VARIANTS.includes(variant as any)){
+          console.error(`Card: Invalid variant "${variant}". Must be one of: ${VALID_VARIANTS.join(', ')}`)
+        }
+        if(style && typeof style !== 'object'){
+          console.error(`Card: Invalid style prop. Must be an object.`)
+        }
+     }
+  }, [children, style, variant]);
+
   const getCardStyle = (): StyleProp<ViewStyle> => {
     const baseStyle: ViewStyle = {
       borderRadius: defaultTheme.borderRadius.md,

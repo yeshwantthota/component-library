@@ -1,6 +1,6 @@
 {
   "name": "component-library-native-3",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "Cross-platform React Native component library that works on web without requiring react-native-web",
   "module": "dist/esm/index.js",
   "react-native": "dist/native/index.js",
